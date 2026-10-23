@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Помощник или костыль</title>
+<meta name="description" content="Тест на 2 минуты: как ты пользуешься нейросетями в учёбе. Основан на опросе 49 школьников и студентов.">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fbf5ec;
+    --bg-hero: #f6e6d2;
+    --surface: #fffdf9;
+    --ink: #2d1f14;
+    --ink2: #6e5845;
+    --muted: #806a58;
+    --line: #ecdfcd;
+    --accent: #b8461a;
+    --accent-hover: #9e3c16;
+    --accent-ink: #ffffff;
+    --accent-soft: #fbe6d6;
+    --t1: #e9984f;   /* помощник */
+    --t2: #d76a2b;   /* переработка */
+    --t3: #9a3a14;   /* костыль */
+    --bar: #d76a2b;
+    --pos: #2f7f86;
+    --neg: #9a3a14;
+    --mid: #cdbfae;
+    --mid2: #e9dccb;
+    --t1-ink: #2d1f14; --t2-ink: #2d1f14; --t3-ink: #ffffff; --pos-ink: #ffffff; --neg-ink: #ffffff; --mid-ink: #2d1f14;
+    --shadow: 0 1px 2px rgba(45,31,20,.06), 0 8px 24px rgba(45,31,20,.06);
+    --radius: 18px;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #17110c; --bg-hero: #241a12; --surface: #221912; --ink: #f6ebdf; --ink2: #d2bfa9; --muted: #b09a86;
+      --line: #3a2c21; --accent: #f0844c; --accent-hover: #f59a69; --accent-ink: #1c120b; --accent-soft: #3a2416;
+      --t1: #f2b47a; --t2: #e07b39; --t3: #c4521f; --bar: #e07b39; --pos: #4fb0b6; --neg: #e06a3a; --mid: #6b5a4a; --mid2: #4a3c30;
+      --t1-ink: #1c120b; --t2-ink: #1c120b; --t3-ink: #ffffff; --pos-ink: #0f2526; --neg-ink: #1c120b; --mid-ink: #f6ebdf;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17110c; --bg-hero: #241a12; --surface: #221912; --ink: #f6ebdf; --ink2: #d2bfa9; --muted: #b09a86;
+    --line: #3a2c21; --accent: #f0844c; --accent-hover: #f59a69; --accent-ink: #1c120b; --accent-soft: #3a2416;
+    --t1: #f2b47a; --t2: #e07b39; --t3: #c4521f; --bar: #e07b39; --pos: #4fb0b6; --neg: #e06a3a; --mid: #6b5a4a; --mid2: #4a3c30;
+      --t1-ink: #1c120b; --t2-ink: #1c120b; --t3-ink: #ffffff; --pos-ink: #0f2526; --neg-ink: #1c120b; --mid-ink: #f6ebdf;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  h1, h2 { font-family: var(--serif); font-weight: 700; letter-spacing: -0.01em; }
+  h1 { font-size: 44px; line-height: 1.08; margin: 0 0 14px; }
+  h2 { font-size: 30px; line-height: 1.15; margin: 0 0 8px; }
+  h3 { font-size: 18px; line-height: 1.3; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  a { color: var(--accent); }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; }
+  section { padding: 40px 0 8px; }
+  .section-lead { color: var(--ink2); margin-bottom: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+
+  /* кнопки */
+  .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 26px; border-radius: 14px; border: 0;
+    background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 650; cursor: pointer; text-decoration: none;
+    box-shadow: 0 2px 0 rgba(0,0,0,.12); transition: transform .12s ease, background-color .15s ease, box-shadow .12s ease; }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: translateY(1px) scale(.98); box-shadow: 0 0 0 rgba(0,0,0,0); }
+  .btn.secondary { background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); box-shadow: none; }
+  .btn.secondary:hover { border-color: var(--accent); }
+  .btn.block { width: 100%; }
+  .btn .arrow { transition: transform .15s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+  .ripple { position: absolute; border-radius: 50%; transform: scale(0); background: currentColor; opacity: .25; pointer-events: none; animation: ripple .5s ease-out; }
+  @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+  /* hero */
+  .hero { background: radial-gradient(1200px 400px at 80% -10%, var(--accent-soft), transparent 60%), linear-gradient(180deg, var(--bg-hero), var(--bg)); padding: 44px 0 28px; }
+  .eyebrow { display: inline-block; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  .lead { font-size: 19px; color: var(--ink2); max-width: 34em; }
+  .scale-demo { display: flex; gap: 6px; margin: 22px 0 22px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 15px; }
+  .pill.t1 { background: var(--t1); color: var(--t1-ink); }
+  .pill.t2 { background: var(--t2); color: var(--t2-ink); }
+  .pill.t3 { background: var(--t3); color: var(--t3-ink); }
+  .scale-demo .sep { align-self: center; color: var(--muted); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 22px; }
+  .stat { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; cursor: pointer; font: inherit; color: inherit; transition: transform .12s ease, border-color .15s ease; }
+  .stat:hover { border-color: var(--accent); }
+  .stat:active { transform: scale(.97); }
+  .stat b { display: block; font-family: var(--serif); font-size: 28px; line-height: 1.1; color: var(--accent); }
+  .stat span { display: block; font-size: 13px; color: var(--ink2); margin-top: 4px; line-height: 1.35; }
+  .stat i { display: block; font-style: normal; font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* тест */
+  [hidden] { display: none !important; }
+  .progress { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .bar { flex: 1; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--t1), var(--t3)); border-radius: 999px; transition: width .35s ease; }
+  .count { font-size: 14px; color: var(--ink2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .q { font-family: var(--serif); font-size: 24px; line-height: 1.3; margin: 0 0 18px; font-weight: 700; }
+  .opts { display: grid; gap: 10px; }
+  .opt { position: relative; overflow: hidden; text-align: left; width: 100%; min-height: 58px; padding: 14px 48px 14px 16px; background: var(--surface); color: var(--ink);
+    border: 1.5px solid var(--line); border-radius: 14px; font: inherit; cursor: pointer; transition: transform .1s ease, border-color .15s ease, background-color .15s ease; }
+  .opt:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .opt:active { transform: scale(.985); }
+  .opt::after { content: ""; position: absolute; right: 16px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; border: 2px solid var(--line); transition: all .15s ease; }
+  .opt.picked { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.picked::after { border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat; }
+  .qcard { animation: slidein .28s ease both; }
+  @keyframes slidein { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+  .qcard.back { animation-name: slideback; }
+  @keyframes slideback { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .link { background: none; border: 0; color: var(--ink2); font: inherit; padding: 8px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .link[disabled] { visibility: hidden; }
+
+  /* результат */
+  .result { animation: pop .4s cubic-bezier(.2,.8,.3,1.2) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+  .type-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink2); margin-bottom: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
+  .gauge { margin: 22px 0 6px; }
+  .gauge-track { position: relative; display: grid; grid-template-columns: 6fr 5fr 7fr; gap: 3px; height: 14px; }
+  .gauge-track span { border-radius: 5px; }
+  .gauge-track span:nth-child(1) { background: var(--t1); }
+  .gauge-track span:nth-child(2) { background: var(--t2); }
+  .gauge-track span:nth-child(3) { background: var(--t3); }
+  .marker { position: absolute; top: -7px; width: 6px; height: 28px; background: var(--ink); border: 2px solid var(--surface); border-radius: 4px; transform: translateX(-3px); left: 0; transition: left .8s cubic-bezier(.2,.8,.3,1); }
+  .gauge-labels { display: grid; grid-template-columns: 6fr 5fr 7fr; gap: 3px; font-size: 13px; color: var(--ink2); margin-top: 8px; }
+  .gauge-labels span:nth-child(2) { text-align: center; }
+  .gauge-labels span:nth-child(3) { text-align: right; }
+  ul.tips { padding-left: 0; list-style: none; margin: 10px 0 0; display: grid; gap: 10px; }
+  ul.tips li { position: relative; padding: 12px 14px 12px 44px; background: var(--bg); border-radius: 12px; }
+  ul.tips li::before { content: counter(tip); counter-increment: tip; position: absolute; left: 12px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+  ul.tips { counter-reset: tip; }
+  .share-bar { display: flex; gap: 3px; height: 34px; border-radius: 8px; overflow: hidden; margin-top: 10px; }
+  .share-bar div { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; transition: flex-grow .6s ease; }
+  .share-bar div.me { box-shadow: inset 0 0 0 3px var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 13px; color: var(--ink2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .actions { display: grid; gap: 10px; margin-top: 22px; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 15px; opacity: 0; transition: all .25s ease; pointer-events: none; z-index: 10; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* диаграммы */
+  .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 12px; margin: 0 -2px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 15px; cursor: pointer; transition: transform .1s ease, background-color .15s ease, border-color .15s ease; }
+  .tab:hover { border-color: var(--accent); }
+  .tab:active { transform: scale(.96); }
+  .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .chart-card { min-height: 280px; }
+  .chart-card h3 { font-size: 19px; }
+  .chart-sub { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .hbar { margin-bottom: 14px; }
+  .hbar-label { font-size: 15px; margin-bottom: 6px; line-height: 1.35; }
+  .hbar-row { display: flex; align-items: center; gap: 10px; }
+  .hbar-track { flex: 1; height: 16px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+  .hbar-fill { height: 100%; width: 0; border-radius: 0 6px 6px 0; transition: width .7s cubic-bezier(.2,.8,.3,1); }
+  .hbar-val { min-width: 96px; text-align: right; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .hbar-val b { font-size: 16px; }
+  .hbar-val span { color: var(--muted); }
+  .stack { display: flex; gap: 2px; height: 30px; border-radius: 8px; overflow: hidden; background: var(--bg); }
+  .stack div { width: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; transition: width .7s cubic-bezier(.2,.8,.3,1); }
+  .snums { font-size: 13px; color: var(--ink2); margin-top: 6px; }
+  .chart-note { margin-top: 16px; padding: 12px 14px; background: var(--accent-soft); border-radius: 12px; font-size: 15px; }
+  .source { margin-top: 14px; font-size: 13px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+  .source a { color: var(--accent); }
+  .div-axis { position: relative; }
+  .div-row { display: grid; grid-template-columns: 1fr; margin-bottom: 14px; }
+  .div-track { position: relative; height: 18px; background: var(--bg); border-radius: 6px; }
+  .div-zero { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink2); }
+  .div-fill { position: absolute; top: 0; height: 100%; width: 0; transition: width .7s cubic-bezier(.2,.8,.3,1); }
+  .div-val { font-size: 14px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+  /* факты из исследований */
+  .facts { display: grid; gap: 14px; }
+  .fact .big { font-family: var(--serif); font-size: 36px; line-height: 1; color: var(--accent); margin-bottom: 6px; }
+  .fact h3 { margin-bottom: 12px; }
+  .fact .hbar-label { font-size: 14px; }
+
+  /* о проекте */
+  .about-grid { display: grid; gap: 12px; }
+  .kv { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .kv:last-child { border-bottom: 0; }
+  .kv dt { color: var(--muted); font-size: 14px; }
+  .kv dd { margin: 0; }
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .timeline li { position: relative; padding: 0 0 18px 28px; }
+  .timeline li::before { content: ""; position: absolute; left: 6px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+  .timeline li::after { content: ""; position: absolute; left: 11px; top: 20px; bottom: 0; width: 2px; background: var(--line); }
+  .timeline li:last-child::after { display: none; }
+  .timeline b { display: block; }
+
+  .quotes { display: grid; gap: 10px; }
+  blockquote { margin: 0; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--t2); border-radius: 0 14px 14px 0; font-family: var(--serif); font-size: 18px; }
+  footer { padding: 36px 0 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 40px; }
+
+  @media (min-width: 640px) {
+    .facts { grid-template-columns: 1fr 1fr; }
+    .fact.wide { grid-column: 1 / -1; }
+  }
+  @media (max-width: 480px) {
+    h1 { font-size: 36px; }
+    h2 { font-size: 26px; }
+    .q { font-size: 21px; }
+    .scale-demo { gap: 4px; flex-wrap: nowrap; }
+    .pill { font-size: 13px; padding: 6px 10px; }
+    .stats { grid-template-columns: 1fr; gap: 8px; }
+    .stat { display: grid; grid-template-columns: 78px 1fr; align-items: center; column-gap: 12px; padding: 12px 14px; }
+    .stat b { font-size: 26px; grid-row: span 2; }
+    .stat span { font-size: 14px; margin-top: 0; }
+    .stat i { margin-top: 2px; }
+    .kv { grid-template-columns: 1fr; gap: 2px; }
+    .hbar-val { min-width: 84px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Школьный исследовательский проект</span>
+    <h1>Помощник или костыль?</h1>
+    <p class="lead">Тест на 2 минуты: как ты пользуешься нейросетями в учёбе — разбираешься сам или сдаёшь готовое.</p>
+    <div class="scale-demo" aria-hidden="true">
+      <span class="pill t1">помощник</span><span class="sep">→</span>
+      <span class="pill t2">переработка</span><span class="sep">→</span>
+      <span class="pill t3">костыль</span>
+    </div>
+    <button class="btn block" id="start">Пройти тест <span class="arrow">→</span></button>
+    <p class="muted small" style="margin-top:12px">8 вопросов · анонимно · ответы теста никуда не отправляются</p>
+    <div class="stats">
+      <button class="stat" data-goto="freq"><b>49</b><span>человек прошли наш опрос</span><i>смотреть диаграмму</i></button>
+      <button class="stat" data-goto="freq"><b>73 %</b><span>пользуются нейросетями для учёбы почти каждый день</span><i>смотреть диаграмму</i></button>
+      <button class="stat" data-goto="way"><b>45 %</b><span>сдают готовый ответ почти без изменений</span><i>смотреть диаграмму</i></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="quiz" hidden aria-live="polite">
+    <div class="progress">
+      <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="card qcard" id="qcard">
+      <p class="q" id="qText"></p>
+      <div class="opts" id="opts" role="group" aria-labelledby="qText"></div>
+      <div class="nav">
+        <button class="link" id="back">← Назад</button>
+        <button class="link" id="quit">Выйти из теста</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" hidden aria-live="polite">
+    <div class="card result">
+      <div class="type-chip"><span class="dot" id="resDot"></span><span>Твой тип</span></div>
+      <h2 id="resTitle"></h2>
+      <p id="resText"></p>
+      <div class="gauge" aria-hidden="true">
+        <div class="gauge-track"><span></span><span></span><span></span><i class="marker" id="marker"></i></div>
+        <div class="gauge-labels"><span>помощник</span><span>переработка</span><span>костыль</span></div>
+      </div>
+      <p class="muted small" id="resScore"></p>
+      <h3 style="margin-top:18px">Что попробовать</h3>
+      <ul class="tips" id="resTips"></ul>
+
+      <h3 style="margin-top:24px">Как ответили участники опроса</h3>
+      <p class="muted small" style="margin:0">44 человека, которые получали готовый ответ нейросети на учебное задание. Рамкой выделен твой тип.</p>
+      <div class="share-bar" id="shareBar"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--t1)"></i>помощник 30 %</span>
+        <span><i class="dot" style="background:var(--t2)"></i>переработка 25 %</span>
+        <span><i class="dot" style="background:var(--t3)"></i>костыль 45 %</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn block" id="feedback" href="#" target="_blank" rel="noopener">Оставить отзыв о тесте — 1 минута</a>
+        <button class="btn secondary block" id="shareBtn">Отправить тест другу</button>
+        <button class="btn secondary block" id="again">Пройти ещё раз</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="survey">
+    <h2>Что показал наш опрос</h2>
+    <p class="section-lead">49 человек: 29 школьников и 20 человек 18–20 лет, сентябрь — октябрь 2026. Переключай диаграммы.</p>
+    <div class="tabs" role="tablist" id="tabs" aria-label="Диаграммы опроса"></div>
+    <div class="card chart-card" role="tabpanel" id="panel" tabindex="0"></div>
+  </section>
+
+  <section id="research">
+    <h2>Что говорят исследования</h2>
+    <p class="section-lead">Факты из источников, которые мы изучили в проекте. У каждого — ссылка, где это можно проверить.</p>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <section id="about">
+    <h2>О проекте</h2>
+    <p class="section-lead">Индивидуальный исследовательский проект «Нейросети в учёбе и жизни молодёжи».</p>
+    <div class="card">
+      <dl style="margin:0">
+        <div class="kv"><dt>Цель</dt><dd>Выяснить, как молодёжь пользуется нейросетями и когда нейросеть помогает учиться, а когда заменяет самостоятельную работу.</dd></div>
+        <div class="kv"><dt>Гипотеза</dt><dd>Люди различаются не тем, как часто пользуются нейросетями, а тем, как именно.</dd></div>
+        <div class="kv"><dt>Итог</dt><dd>Гипотеза подтвердилась частично: среди тех, кто пользуется нейросетью почти каждый день, есть и помощники, и костыли, но костылей больше — 16 из 31.</dd></div>
+        <div class="kv"><dt>Неожиданное</dt><dd>13 из 20 человек, которые сдают готовые ответы, уверены, что нейросеть помогает им учиться. И почти у всех опрошенных хорошие оценки.</dd></div>
+      </dl>
+    </div>
+    <h3 style="margin:24px 0 12px">Как шла работа</h3>
+    <ol class="timeline">
+      <li><b>Сентябрь 2026</b>Выбрали тему, составили анкету и провели пилотный опрос — 18 человек.</li>
+      <li><b>Октябрь 2026</b>Изучили 15 источников, доработали анкету и провели основной опрос — 31 человек. Ответы пришли от школьников трёх школ и студентов вуза.</li>
+      <li><b>Октябрь 2026</b>Объединили ответы, построили диаграммы и проверили гипотезу.</li>
+      <li><b>Октябрь — ноябрь 2026</b>Сделали шкалу делегирования от 0 до 17 баллов и этот тест.</li>
+    </ol>
+  </section>
+
+  <section id="advice">
+    <h2>Советы участников опроса</h2>
+    <p class="section-lead">Ответы на вопрос «Какой совет ты бы дал младшекласснику, который начинает пользоваться нейросетями?»</p>
+    <div class="quotes">
+      <blockquote>Делегируй, но вникай.</blockquote>
+      <blockquote>Используй нейросеть, чтобы узнать новое и разобраться с новой темой. Учишься ты — она всё уже умеет делать.</blockquote>
+      <blockquote>Не стоит делать домашку полностью нейросетью: лучше сначала сделать, а потом только проверить.</blockquote>
+      <blockquote>Использовать их для проверки, а не как ГДЗ.</blockquote>
+      <blockquote>Стараться думать самому и решать задачи самому. Только в крайних случаях использовать нейросеть.</blockquote>
+    </div>
+  </section>
+
+  <footer>
+    Индивидуальный проект «Нейросети в учёбе и жизни молодёжи». Автор — Леонид Ф., 10 класс, МБОУ СОШ № 57, Воронеж, 2026.
+  </footer>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  var FEEDBACK_URL = "https://forms.yandex.ru/u/6ad790a16d2d734382a5a6db";
+  var OWN = "Опрос проекта «Нейросети в учёбе и жизни молодёжи», Яндекс Формы, сентябрь — октябрь 2026";
+
+  // ---------- тест ----------
+  var QUESTIONS = [
+    { q: "Нейросеть дала готовый ответ на домашнее задание. Что ты сделаешь?", a: [
+      ["Сдам как есть", 3], ["Немного изменю, чтобы не было заметно", 3], ["Перепишу своими словами", 2],
+      ["Разберусь в решении и сделаю сам", 0], ["Сначала решу сам, потом сверю с нейросетью", 0] ] },
+    { q: "Как ты чаще всего просишь нейросеть о помощи с учёбой?", a: [
+      ["«Реши» или «напиши за меня»", 2], ["«Дай идею, с чего начать»", 1], ["«Объясни, как это решать»", 0], ["«Проверь моё решение»", 0] ] },
+    { q: "Задание сложное. Что ты делаешь сначала?", a: [
+      ["Сразу прошу у нейросети готовый ответ", 2], ["Сразу спрашиваю нейросеть, но разбираюсь в ответе", 1], ["Сначала пробую сам", 0] ] },
+    { q: "Ты проверяешь ответы нейросети?", a: [
+      ["Почти никогда", 2], ["Иногда", 1], ["Почти всегда: по учебнику, другим источникам или пересчитываю сам", 0] ] },
+    { q: "Какую часть домашних заданий ты делаешь с помощью нейросети?", a: [
+      ["Больше половины", 2], ["Примерно половину", 1], ["Меньше половины", 0] ] },
+    { q: "Учитель просит объяснить работу, которую ты сделал с нейросетью. Ты…", a: [
+      ["Скорее не смогу", 2], ["Объясню, но не всё", 1], ["Спокойно объясню", 0] ] },
+    { q: "Ты получил хорошую оценку за работу, сделанную с нейросетью. Ты понимаешь эту тему?", a: [
+      ["Честно — нет", 2], ["Примерно", 1], ["Да, разобрался", 0] ] },
+    { q: "Нейросети отключили на неделю. С домашкой…", a: [
+      ["Почти ничего не сделаю", 2], ["Будет труднее, но справлюсь", 1], ["Справлюсь так же", 0] ] }
+  ];
+  var MAX = 17; // 3 + 2 × 7; шкала: 0–5 помощник, 6–10 переработка, 11–17 костыль
+
+  var TYPES = {
+    helper: { title: "Помощник", color: "var(--t1)", ink: "var(--t1-ink)",
+      text: "Ты используешь нейросеть как помощника: сначала думаешь сам, а нейросеть объясняет и проверяет. Так нейросеть помогает учиться, а не учится за тебя.",
+      tips: ["Продолжай: сначала решай сам, потом сверяй с нейросетью. Так поступили всего 7 % участников опроса.",
+             "Проверяй даже уверенные ответы: 80 % опрошенных замечали ошибки нейросети.",
+             "Покажи одноклассникам, как просить объяснение вместо готового ответа: этому учили только 9 человек из 31."] },
+    middle: { title: "Переработка: между помощником и костылём", color: "var(--t2)", ink: "var(--t2-ink)",
+      text: "Ты не сдаёшь ответ нейросети как есть, но и не всегда разбираешься в нём сам. Переписать своими словами — ещё не значит понять.",
+      tips: ["Проверь себя: сможешь объяснить тему без телефона? Если нет, ответ нейросети остался не твоим.",
+             "Проси не ответ, а объяснение: «объясни по шагам, но не решай за меня».",
+             "Попробуй решить хотя бы одно задание из трёх сам и только потом сверить с нейросетью."] },
+    crutch: { title: "Костыль", color: "var(--t3)", ink: "var(--t3-ink)",
+      text: "Сейчас нейросеть делает работу за тебя. Оценки от этого могут быть хорошими, но без нейросети задания становятся труднее, и это всплывает на контрольной.",
+      tips: ["Сначала 10 минут думай сам, а нейросеть используй только для проверки.",
+             "В эксперименте со старшеклассниками те, кто пользовался ChatGPT как костылём, написали контрольную без него на 17 % хуже тех, у кого нейросети не было вообще.",
+             "Если не можешь объяснить работу учителю, она не твоя. Разбери хотя бы одно задание до конца."] }
+  };
+  var SHARE = [["helper", 30], ["middle", 25], ["crutch", 45]];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var answers = [], i = 0, busy = false;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function buzz() { if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} } }
+  function ripple(e) {
+    var b = e.currentTarget, r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), d = document.createElement("span");
+    d.className = "ripple"; d.style.width = d.style.height = s + "px";
+    var x = (e.clientX || r.left + r.width / 2) - r.left - s / 2, y = (e.clientY || r.top + r.height / 2) - r.top - s / 2;
+    d.style.left = x + "px"; d.style.top = y + "px"; b.appendChild(d); setTimeout(function () { d.remove(); }, 520);
+  }
+  document.querySelectorAll(".btn").forEach(function (b) { b.addEventListener("pointerdown", ripple); });
+
+  function typeOf(score) { return score <= 5 ? "helper" : score <= 10 ? "middle" : "crutch"; }
+  function show(id) {
+    $("quiz").hidden = id !== "quiz"; $("result").hidden = id !== "result";
+    var el = $(id); if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+  function render(dir) {
+    var item = QUESTIONS[i], card = $("qcard");
+    card.classList.remove("qcard", "back"); void card.offsetWidth; card.classList.add("qcard"); if (dir === "back") card.classList.add("back");
+    $("count").textContent = "Вопрос " + (i + 1) + " из " + QUESTIONS.length;
+    $("barFill").style.width = (i / QUESTIONS.length * 100) + "%";
+    $("qText").textContent = item.q;
+    var box = $("opts"); box.innerHTML = "";
+    item.a.forEach(function (opt, k) {
+      var b = document.createElement("button");
+      b.className = "opt" + (answers[i] === k ? " picked" : ""); b.type = "button"; b.textContent = opt[0];
+      b.setAttribute("aria-pressed", answers[i] === k ? "true" : "false");
+      b.addEventListener("click", function () { choose(k, b); });
+      box.appendChild(b);
+    });
+    $("back").disabled = (i === 0);
+  }
+  function choose(k, btn) {
+    if (busy) return; busy = true; buzz();
+    answers[i] = k;
+    document.querySelectorAll("#opts .opt").forEach(function (o) { o.classList.remove("picked"); o.setAttribute("aria-pressed", "false"); });
+    btn.classList.add("picked"); btn.setAttribute("aria-pressed", "true");
+    setTimeout(function () {
+      busy = false;
+      if (i < QUESTIONS.length - 1) { i++; render(); } else finish();
+    }, reduce ? 0 : 230);
+  }
+  function finish() {
+    $("barFill").style.width = "100%";
+    var score = 0;
+    answers.forEach(function (k, n) { score += QUESTIONS[n].a[k][1]; });
+    var key = typeOf(score), t = TYPES[key];
+    $("resTitle").textContent = t.title;
+    $("resDot").style.background = t.color;
+    $("resText").textContent = t.text;
+    $("resScore").textContent = "Баллы делегирования: " + score + " из " + MAX + ". Чем больше баллов, тем больше работы ты перекладываешь на нейросеть.";
+    var ul = $("resTips"); ul.innerHTML = "";
+    t.tips.forEach(function (tip) { var li = document.createElement("li"); li.textContent = tip; ul.appendChild(li); });
+    var bar = $("shareBar"); bar.innerHTML = "";
+    SHARE.forEach(function (s) {
+      var d = document.createElement("div");
+      d.style.flexGrow = s[1]; d.style.flexBasis = "0"; d.style.background = TYPES[s[0]].color; d.style.color = TYPES[s[0]].ink;
+      d.textContent = s[1] + " %"; if (s[0] === key) d.className = "me"; bar.appendChild(d);
+    });
+    $("marker").style.left = "0%";
+    show("result");
+    setTimeout(function () { $("marker").style.left = (score / MAX * 100) + "%"; }, 120);
+  }
+  function startQuiz() { i = 0; answers = []; show("quiz"); render(); }
+  $("start").addEventListener("click", startQuiz);
+  $("again").addEventListener("click", startQuiz);
+  $("back").addEventListener("click", function () { if (i > 0) { i--; render("back"); } });
+  $("quit").addEventListener("click", function () { $("quiz").hidden = true; window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
+  $("feedback").href = FEEDBACK_URL;
+
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 2200); }
+  $("shareBtn").addEventListener("click", function () {
+    var data = { title: "Помощник или костыль?", text: "Тест на 2 минуты: как ты пользуешься нейросетями в учёбе", url: location.href.split("#")[0] };
+    if (navigator.share) { navigator.share(data).catch(function () {}); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(data.url).then(function () { toast("Ссылка скопирована"); }, function () { toast(data.url); }); }
+    else toast(data.url);
+  });
+
+  // ---------- диаграммы опроса ----------
+  var T = { h: "var(--t1)", m: "var(--t2)", c: "var(--t3)" };
+  var TINK = { h: "var(--t1-ink)", m: "var(--t2-ink)", c: "var(--t3-ink)" };
+  var CHARTS = [
+    { id: "freq", tab: "Как часто", title: "Как часто пользуются нейросетями для учёбы", sub: "Ответили 45 человек", kind: "bars", n: 45,
+      rows: [["Каждый день или 5–7 дней в неделю", 33], ["3–4 дня в неделю", 9], ["Раз в неделю и реже", 3]],
+      note: "Почти три четверти пользуются нейросетью для учёбы почти каждый день." },
+    { id: "tasks", tab: "Для чего", title: "Для каких учебных задач используют нейросети", sub: "47 человек, можно было выбрать несколько вариантов", kind: "bars", n: 47,
+      rows: [["Написать сочинение или эссе", 30], ["Перевод или задание по иностранному", 30], ["Решить задачу", 28], ["Доклад, реферат или презентация", 28],
+             ["Объяснить непонятную тему", 24], ["Проверить своё решение", 24], ["Краткий пересказ", 23], ["Подготовиться к контрольной", 19], ["Придумать, с чего начать", 13]],
+      note: "Нейросеть чаще пишет за ученика, чем объясняет ему: объяснить тему просит только половина." },
+    { id: "way", tab: "Готовый ответ", title: "Что делают с готовым ответом нейросети", sub: "44 человека, получавших готовый ответ", kind: "bars", n: 44,
+      rows: [["Сверил со своим решением", 3, "h"], ["Разобрался и сделал сам", 10, "h"], ["Переписал своими словами", 11, "m"], ["Немного изменил, чтобы не было заметно", 12, "c"], ["Сдал как есть", 8, "c"]],
+      legend: true, note: "45 % используют нейросеть как костыль. Самый полезный способ — сначала решить самому, потом сверить — выбрали всего трое." },
+    { id: "hyp", tab: "Частота и способ", title: "Как частота связана со способом использования", sub: "Проверка гипотезы, 43 человека. Доля каждого типа внутри группы", kind: "stack",
+      cats: [["h", "помощник"], ["m", "переработка"], ["c", "костыль"]],
+      rows: [["Почти каждый день", { h: 9, m: 6, c: 16 }], ["3–4 дня в неделю", { h: 3, m: 4, c: 2 }], ["Раз в неделю и реже", { h: 1, m: 1, c: 1 }]],
+      note: "Среди частых пользователей есть все три типа — значит, частота не решает всё. Но костылей среди них больше: 16 из 31. Гипотеза подтвердилась частично." },
+    { id: "opinion", tab: "Мнение о пользе", title: "Помогают ли нейросети учиться — по мнению самих пользователей", sub: "44 человека, разбиты по типам", kind: "stack",
+      cats: [["pos", "помогают"], ["mid", "и помогают, и мешают"], ["mid2", "не влияют"], ["neg", "мешают"]],
+      rows: [["Помощники", { pos: 7, mid: 5, mid2: 1, neg: 0 }], ["Переработка", { pos: 6, mid: 4, mid2: 0, neg: 1 }], ["Костыли", { pos: 13, mid: 6, mid2: 1, neg: 0 }]],
+      note: "13 из 20 «костылей» уверены, что нейросеть помогает им учиться, и ни один не ответил «мешает»." },
+    { id: "allowed", tab: "Что допустимо", title: "Что считают допустимым", sub: "Основная анкета, 31 человек", kind: "stack",
+      cats: [["pos", "допустимо"], ["mid", "зависит от правил"], ["neg", "недопустимо"], ["mid2", "затрудняюсь"]],
+      rows: [["Объяснить непонятную тему", { pos: 26, mid: 3, neg: 1, mid2: 1 }], ["Проверить своё готовое решение", { pos: 26, mid: 4, neg: 1, mid2: 0 }], ["Сдать готовую работу без изменений", { pos: 12, mid: 16, neg: 3, mid2: 0 }]],
+      note: "Сдать полностью готовую работу без изменений допустимым считают 12 из 31, недопустимым — только трое." },
+    { id: "taught", tab: "Учили ли", title: "Показывал ли кто-нибудь, как составлять запросы и проверять ответы нейросети", sub: "Основная анкета, 31 человек", kind: "bars", n: 31,
+      rows: [["Нет", 18], ["Да", 9], ["Не помню", 4]],
+      note: "Правилам почти никого не учили: у 13 из 31 учителя не объясняли, когда можно пользоваться нейросетями." },
+    { id: "life", tab: "Вне учёбы", title: "Для чего пользуются нейросетями вне учёбы", sub: "47 человек, можно было выбрать несколько вариантов", kind: "bars", n: 47,
+      rows: [["Помочь с выбором: что купить, посмотреть, куда пойти", 23], ["Программирование и свои проекты", 19], ["Здоровье, спорт, питание", 18], ["Совет в личной ситуации", 16],
+             ["Хобби и творчество", 11], ["Приколы, мемы, развлечения", 6], ["Просто поговорить, когда скучно", 4]],
+      note: "80 % пользуются нейросетями и вне учёбы. Половина хотя бы раз спрашивала нейросеть о том, что не стала бы обсуждать с людьми." },
+    { id: "tools", tab: "Какие нейросети", title: "Какими нейросетями пользуются", sub: "47 человек, можно было выбрать несколько вариантов", kind: "bars", n: 47,
+      rows: [["Алиса / YandexGPT", 31], ["DeepSeek", 26], ["ChatGPT", 24], ["Gemini", 19], ["Claude", 8], ["Perplexity", 7], ["GigaChat", 4]],
+      note: "Российская Алиса оказалась популярнее ChatGPT." }
+  ];
+  var COL = { pos: "var(--pos)", neg: "var(--neg)", mid: "var(--mid)", mid2: "var(--mid2)", h: T.h, m: T.m, c: T.c };
+  var INK = { pos: "var(--pos-ink)", neg: "var(--neg-ink)", mid: "var(--mid-ink)", mid2: "var(--mid-ink)", h: TINK.h, m: TINK.m, c: TINK.c };
+
+  function pct(v, n) { return Math.round(v * 100 / n); }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function barsHTML(rows, n, scaleMax, color) {
+    var wrap = el("div");
+    rows.forEach(function (r) {
+      var v = r[1], p = pct(v, n), c = r[2] ? COL[r[2]] : (color || "var(--bar)");
+      var row = el("div", "hbar");
+      row.appendChild(el("div", "hbar-label", esc(r[0])));
+      var line = el("div", "hbar-row");
+      var track = el("div", "hbar-track"); var fill = el("div", "hbar-fill");
+      fill.style.background = c; fill.dataset.w = (v / scaleMax * 100) + "%"; fill.title = r[0] + ": " + v + " из " + n + " (" + p + " %)";
+      track.appendChild(fill); line.appendChild(track);
+      line.appendChild(el("div", "hbar-val", "<b>" + p + " %</b> <span>" + v + " из " + n + "</span>"));
+      row.appendChild(line); wrap.appendChild(row);
+    });
+    return wrap;
+  }
+  function stackHTML(rows, cats) {
+    var wrap = el("div");
+    rows.forEach(function (r) {
+      var d = r[1], tot = 0; cats.forEach(function (c) { tot += d[c[0]] || 0; });
+      var row = el("div", "hbar");
+      row.appendChild(el("div", "hbar-label", esc(r[0]) + " <span class='muted'>· " + tot + " чел.</span>"));
+      var st = el("div", "stack");
+      cats.forEach(function (c) {
+        var v = d[c[0]] || 0; if (!v) return;
+        var s = el("div"); var w = v / tot * 100;
+        s.style.background = COL[c[0]]; s.style.color = INK[c[0]]; s.dataset.w = w + "%";
+        s.textContent = w >= 12 ? v : ""; s.title = c[1] + ": " + v + " из " + tot;
+        st.appendChild(s);
+      });
+      row.appendChild(st);
+      row.appendChild(el("div", "snums", cats.filter(function (c) { return d[c[0]]; }).map(function (c) { return esc(c[1]) + " " + d[c[0]]; }).join(" · ")));
+      wrap.appendChild(row);
+    });
+    return wrap;
+  }
+  function legendHTML(cats) {
+    var l = el("div", "legend");
+    cats.forEach(function (c) { l.appendChild(el("span", null, "<i class='dot' style='background:" + COL[c[0]] + "'></i>" + esc(c[1]))); });
+    return l;
+  }
+  function grow(root) {
+    var fills = root.querySelectorAll("[data-w]");
+    requestAnimationFrame(function () { requestAnimationFrame(function () { fills.forEach(function (f) { f.style.width = f.dataset.w; }); }); });
+  }
+
+  var tabs = $("tabs"), panel = $("panel");
+  function showChart(id, focusTab) {
+    var c = CHARTS.filter(function (x) { return x.id === id; })[0] || CHARTS[0];
+    tabs.querySelectorAll(".tab").forEach(function (t) {
+      var on = t.dataset.id === c.id; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1;
+      if (on && focusTab) t.focus(); if (on) t.scrollIntoView({ block: "nearest", inline: "nearest" });
+    });
+    panel.innerHTML = "";
+    panel.setAttribute("aria-labelledby", "tab-" + c.id);
+    panel.appendChild(el("h3", null, esc(c.title)));
+    panel.appendChild(el("div", "chart-sub", esc(c.sub)));
+    if (c.kind === "bars") {
+      var max = 0; c.rows.forEach(function (r) { max = Math.max(max, r[1]); });
+      panel.appendChild(barsHTML(c.rows, c.n, Math.max(max, c.n * 0.5)));
+      if (c.legend) panel.appendChild(legendHTML([["h", "помощник"], ["m", "переработка"], ["c", "костыль"]]));
+    } else {
+      panel.appendChild(legendHTML(c.cats));
+      var s = stackHTML(c.rows, c.cats); s.style.marginTop = "14px"; panel.appendChild(s);
+    }
+    panel.appendChild(el("div", "chart-note", esc(c.note)));
+    panel.appendChild(el("div", "source", "Источник: " + esc(OWN) + "."));
+    grow(panel);
+  }
+  CHARTS.forEach(function (c, k) {
+    var t = el("button", "tab", esc(c.tab)); t.type = "button"; t.id = "tab-" + c.id; t.dataset.id = c.id;
+    t.setAttribute("role", "tab"); t.setAttribute("aria-controls", "panel");
+    t.addEventListener("click", function () { buzz(); showChart(c.id); });
+    t.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        e.preventDefault(); var j = (k + (e.key === "ArrowRight" ? 1 : -1) + CHARTS.length) % CHARTS.length; showChart(CHARTS[j].id, true);
+      }
+    });
+    tabs.appendChild(t);
+  });
+  showChart("freq");
+  document.querySelectorAll("[data-goto]").forEach(function (b) {
+    b.addEventListener("click", function () { buzz(); showChart(b.dataset.goto); $("survey").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); });
+  });
+
+  // ---------- факты из исследований ----------
+  var FACTS = [
+    { big: "×2 за год", title: "Подростков, которые делают уроки с ChatGPT, за год стало вдвое больше", kind: "bars", unit: "%",
+      rows: [["2023 год", 13], ["2024 год", 26]], max: 100, sub: "Подростки США 13–17 лет, 1391 человек",
+      src: ["Pew Research Center, 2025", "https://www.pewresearch.org/short-reads/2025/01/15/about-a-quarter-of-us-teens-have-used-chatgpt-for-schoolwork-double-the-share-in-2023/"] },
+    { big: "−17 %", wide: true, title: "Кто тренировался с обычным ChatGPT, написал контрольную без него хуже тех, у кого нейросети не было", kind: "div",
+      rows: [["Тренировка с обычным ChatGPT", 48], ["Тренировка с ИИ-репетитором, который подсказывает, а не решает", 127], ["Контрольная без ИИ после обычного ChatGPT", -17], ["Контрольная без ИИ после ИИ-репетитора", 0]],
+      sub: "Эксперимент почти на тысяче старшеклассников, математика. Изменение оценок по сравнению с теми, у кого ИИ не было",
+      src: ["Bastani и др., журнал PNAS, 2025", "https://www.pnas.org/doi/10.1073/pnas.2422633122"] },
+    { big: "81 %", title: "Молодёжь пользуется нейросетями вдвое чаще старших", kind: "bars", unit: "%",
+      rows: [["Россияне младше 34 лет", 81], ["Россияне старше 35 лет", 41]], max: 100, sub: "Пользовались нейросетями за последний год. Опрос 1600 человек",
+      src: ["ВЦИОМ, 2025 (по данным «Эксперта»)", "https://expert.ru/news/vtsiom-kazhdyy-vtoroy-rossiyanin-polzovalsya-neyrosetyami-v-techenie-poslednego-goda/"] },
+    { big: "71 %", title: "Школьники 14–15 лет используют нейросети для учёбы", kind: "bars", unit: "%",
+      rows: [["Пользуются нейросетями", 78], ["Используют для учёбы", 71], ["Используют вместо поисковика", 53]], max: 100, sub: "600 школьников 14–15 лет, весна 2026",
+      src: ["Ассоциация «Я — профессионал», 2026 (по данным ТАСС)", "https://www1.ru/news/2026/06/09/pervoe-pokolenie-vyrossee-s-neirosetiami-78-rossiiskix-skolnikov-peresli-na-ii-dlia-reseniia-ucebnyx-zadac.amp.html"] },
+    { big: "59 %", title: "Подростки говорят, что списывание с ИИ в их школе — обычное дело", kind: "bars", unit: "%",
+      rows: [["Пользовались чат-ботами для учёбы", 54], ["Говорят, что в их школе с ИИ списывают довольно часто", 59], ["Делают с ИИ все или почти все задания", 10]], max: 100,
+      sub: "1458 подростков США, осень 2025",
+      src: ["Pew Research Center, 2026", "https://www.pewresearch.org/internet/2026/02/24/how-teens-use-and-view-ai/"] },
+    { big: "72 %", title: "Подростки общаются с ИИ не только ради учёбы", kind: "bars", unit: "%",
+      rows: [["Хотя бы раз общались с ИИ-собеседником", 72], ["Делают это регулярно", 52], ["Выбирали ИИ вместо человека для серьёзного разговора", 33]], max: 100,
+      sub: "1060 подростков США, 2025",
+      src: ["Common Sense Media, 2025", "https://www.commonsensemedia.org/research/talk-trust-and-trade-offs-how-and-why-teens-use-ai-companions"] },
+    { big: "46 %", title: "Почти половина россиян против нейросетей для домашки", kind: "bars", unit: "%",
+      rows: [["Не разрешили бы детям пользоваться ИИ для уроков", 46], ["Согласны на ИИ по отдельным предметам", 30], ["Ребёнок уже пользуется ИИ для учёбы", 10]], max: 100,
+      sub: "Опрос взрослых россиян",
+      src: ["ВЦИОМ, 2025 (по данным «Мела»)", "https://mel.fm/novosti/7830964-len-plagiat-i-ukhudsheniye-kriticheskogo-myshleniya-46-rossiyan-protiv-ispolzovaniya-neyrosetey-v-sh"] }
+  ];
+  function factBars(f) {
+    var wrap = el("div");
+    f.rows.forEach(function (r) {
+      var row = el("div", "hbar"); row.appendChild(el("div", "hbar-label", esc(r[0])));
+      var line = el("div", "hbar-row"), track = el("div", "hbar-track"), fill = el("div", "hbar-fill");
+      fill.style.background = "var(--bar)"; fill.dataset.w = (r[1] / f.max * 100) + "%";
+      track.appendChild(fill); line.appendChild(track); line.appendChild(el("div", "hbar-val", "<b>" + r[1] + " %</b>"));
+      row.appendChild(line); wrap.appendChild(row);
+    });
+    return wrap;
+  }
+  function factDiv(f) {
+    var lo = -20, hi = 130, span = hi - lo, zero = (0 - lo) / span * 100;
+    var wrap = el("div");
+    f.rows.forEach(function (r) {
+      var v = r[1], row = el("div", "div-row");
+      row.appendChild(el("div", "hbar-label", esc(r[0])));
+      var tr = el("div", "div-track"), z = el("div", "div-zero"), fill = el("div", "div-fill");
+      z.style.left = zero + "%";
+      var w = Math.abs(v) / span * 100;
+      if (v >= 0) { fill.style.left = zero + "%"; fill.style.background = "var(--pos)"; fill.style.borderRadius = "0 6px 6px 0"; }
+      else { fill.style.right = (100 - zero) + "%"; fill.style.background = "var(--neg)"; fill.style.borderRadius = "6px 0 0 6px"; }
+      fill.dataset.w = w + "%";
+      tr.appendChild(fill); tr.appendChild(z); row.appendChild(tr);
+      row.appendChild(el("div", "div-val", "<b>" + (v > 0 ? "+" + v + " %" : v < 0 ? "−" + Math.abs(v) + " %" : "без изменений") + "</b>"));
+      wrap.appendChild(row);
+    });
+    return wrap;
+  }
+  var factsBox = $("facts");
+  FACTS.forEach(function (f) {
+    var card = el("article", "card fact" + (f.wide ? " wide" : ""));
+    card.appendChild(el("div", "big", esc(f.big)));
+    card.appendChild(el("h3", null, esc(f.title)));
+    card.appendChild(el("div", "chart-sub", esc(f.sub)));
+    card.appendChild(f.kind === "div" ? factDiv(f) : factBars(f));
+    card.appendChild(el("div", "source", "Источник: <a href='" + f.src[1] + "' target='_blank' rel='noopener'>" + esc(f.src[0]) + " ↗</a>"));
+    factsBox.appendChild(card);
+  });
+  // факты растут, когда появляются на экране
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { grow(en.target); io.unobserve(en.target); } });
+    }, { threshold: 0.25 });
+    factsBox.querySelectorAll(".fact").forEach(function (c) { io.observe(c); });
+  } else grow(factsBox);
+})();
+</script>
+</body>
+</html>
